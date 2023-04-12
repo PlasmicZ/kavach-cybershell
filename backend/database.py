@@ -1,35 +1,45 @@
-from model import Todo
-# MongoDb driver
-import motor.motor_asyncio
+import pandas as pd
+import sqlite3 
+import hashlib
 
-client = motor.motor_asyncio.AsyncIOMotorClient('mongodb://localhost:27017/')
+conn = sqlite3.connect('data.db')
+c = conn.cursor()
 
-database = client.TodoList
-collection = database.todo
+def make_hashes(password):
+	return hashlib.sha256(str.encode(password)).hexdigest()
 
-async def fetch_one_todo(title):
-    document = collection.find_one({"title":title})
-    return document
+def check_hashes(password,hashed_text):
+	if make_hashes(password) == hashed_text:
+		return hashed_text
+	return False
 
-async def fetch_all_todos():
-    todos = []
-    cursor = collection.find({})
+async def create_usertable():
+	c.execute('CREATE TABLE IF NOT EXISTS usertable(name TEXT,phone INTEGER PRIMARY KEY,password TEXT)')
+	
+async def create_smstable():
+	c.execute('CREATE TABLE IF NOT EXISTS smstable(name TEXT,phone INTEGER,password TEXT,FOREIGN KEY (phone) REFERENCES usertable(phone))')
+	
+async def create_phonetable():
+	c.execute('CREATE TABLE IF NOT EXISTS phonetable(name TEXT,phone INTEGER,password TEXT,FOREIGN KEY (phone) REFERENCES usertable(phone))')
+	
+async def create_emailtable():
+	c.execute('CREATE TABLE IF NOT EXISTS emailtable(name TEXT,phone INTEGER,password TEXT,FOREIGN KEY (phone) REFERENCES usertable(phone))')
 
-    async for document in cursor:
-        todos.append(Todo(**document))
 
-    return todos
+async def add_userdata(username,phone,password):
+	c.execute('INSERT INTO userstable(username,phone,password) VALUES (?,?,?)', (username,phone,password))
+	conn.commit()
 
-async def create_todo(todo):
-    document = todo
-    result = await collection.insert_one(document)
-    return document
+async def login_user(username,phone,password):
+	c.execute('SELECT * FROM userstable WHERE username = ? AND phone=? AND password = ?', (username,phone,password))
+	data = c.fetchall()
+	return data
 
-async def update_todo(title, desciption):
-    await collection.update_one({"title": title}, {'$set':{"desciption":desciption}})
-    document = await collection.find_one({'title':title})
-    return document
+async def view_all_users():
+	c.execute('SELECT * FROM userstable')
+	data = c.fetchall()
+	return data
 
-async def remove_todo(title):
-    await collection.delete_one({"title" : title})
-    return True
+
+conn.commit()
+conn.close()
