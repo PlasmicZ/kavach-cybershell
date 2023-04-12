@@ -30,8 +30,9 @@ const App = () => {
 
   return (
     <div className="bg-gray-200 min-h-screen flex items-center justify-center">
+      
       <div className="bg-white p-8 rounded-lg shadow-md">
-        <h1 className="text-2xl font-bold mb-4">Text Prediction App</h1>
+        <h1 className="text-2xl font-bold mb-4 text-center">Email Spam Detection</h1>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
@@ -49,7 +50,7 @@ const App = () => {
         </form>
         {result && (
           <div className="mt-4">
-            <h2 className="text-xl font-semibold">Prediction:</h2>
+            <h2 className="text-xl font-semibold">Risk Score:</h2>
             <p className="mt-2">{result}</p>
           </div>
         )}
