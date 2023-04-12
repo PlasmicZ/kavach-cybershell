@@ -1,0 +1,4 @@
+fastapi==0.95.0
+motor==3.1.1
+nltk==3.8.1
+pydantic==1.10.4
