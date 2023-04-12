@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-
-const App = () => {
+const App: React.FC = () => {
   const [text, setText] = useState("");
-  const [result, setResult] = useState(null);
-  const [error, setError] = useState(null);
+  const [result, setResult] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Remove punctuation from text
@@ -30,7 +29,6 @@ const App = () => {
 
   return (
     <div className="bg-gray-200 min-h-screen flex items-center justify-center">
-      
       <div className="bg-white p-8 rounded-lg shadow-md">
         <h1 className="text-2xl font-bold mb-4 text-center">Email Spam Detection</h1>
         <form onSubmit={handleSubmit}>
