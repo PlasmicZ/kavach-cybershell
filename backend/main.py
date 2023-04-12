@@ -26,7 +26,7 @@ def read_root():
 
 @app.get("/api/predict/{text}/", response_model=Infer)
 async def predict_score(text):
-    response = await calculate_score(text)
+    response = calculate_score(text)
 
     if response:
         return response

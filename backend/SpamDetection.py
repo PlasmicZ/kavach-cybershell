@@ -57,7 +57,5 @@ class SpamDetection():
         vector_input = self.pipe.transform([transformed_sms])
         
         # predict
-        result = self.model.predict_proba(vector_input)[0][1] 
+        result = str(self.model.predict_proba(vector_input)[0][1] * 10)
         return result
-
-spam_model = SpamDetection()

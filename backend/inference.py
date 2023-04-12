@@ -1,5 +1,7 @@
-from SpamDetection import spam_model
+from SpamDetection import SpamDetection
 
-async def calculate_score(text: str):
-    score = await spam_model.predict()
-    return score
+def calculate_score(text: str):
+    spam_model = SpamDetection() 
+    score = spam_model.predict(text)
+    response = {"score":score}
+    return response
