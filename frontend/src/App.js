@@ -8,18 +8,22 @@ const App = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Remove punctuation from text
+    const textWithoutPunctuation = text.replace(/[^\w\s]|_/g, "").replace(/\s+/g, " ");
+    setText(textWithoutPunctuation);
+
     try {
-      const response = await fetch(`/api/predict/${text}/`);
+      const response = await fetch(`http://127.0.0.1:8000/api/predict/${textWithoutPunctuation}/`);
       if (response.ok) {
         const data = await response.json();
         setResult(data);
         setError(null);
       } else {
-        setError(`Error in fetching score of text: ${text}`);
+        setError(`Error in fetching score of text: ${textWithoutPunctuation}`);
         setResult(null);
       }
     } catch (error) {
-      setError(`Error in fetching score of text: ${text}`);
+      setError(`Error in fetching score of text: ${textWithoutPunctuation}`);
       setResult(null);
     }
   };
